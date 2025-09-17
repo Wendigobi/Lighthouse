@@ -12,17 +12,16 @@
             background-color: #000000; /* Deep black background */
             color: #E2E8F0;
         }
+        .text-neon-glow {
+            color: #00BFFF;
+            text-shadow: 0 0 8px rgba(0, 191, 255, 0.7),
+                         0 0 15px rgba(0, 191, 255, 0.5);
+        }
         .glass-card {
             background: rgba(5, 5, 5, 0.6); /* Darker semi-transparent base */
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 191, 255, 0.15); /* Neon blue border */
-            transition: all 0.3s ease-out;
-        }
-        .glass-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: rgba(0, 191, 255, 0.4);
-            box-shadow: 0 10px 40px rgba(0, 191, 255, 0.15);
         }
         .navbar-glass {
             box-shadow: 0 8px 32px 0 rgba(0, 191, 255, 0.1);
@@ -32,38 +31,16 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
             z-index: -1;
         }
         .glow-effect {
             position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(0, 191, 255, 0.2) 0%, rgba(0, 191, 255, 0) 65%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.15) 0%, rgba(0, 191, 255, 0) 60%);
             z-index: -1;
             pointer-events: none;
-        }
-        .btn-primary {
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
-        }
-        .btn-primary:hover {
-            box-shadow: 0 0 35px rgba(0, 191, 255, 0.6);
-            transform: translateY(-3px) scale(1.05);
-        }
-        /* Custom Neon Blue Color */
-        .text-neon-blue { color: #00BFFF; }
-        .bg-neon-blue { background-color: #00BFFF; }
-        .border-neon-blue { border-color: #00BFFF; }
-        .ring-neon-blue { --tw-ring-color: #00BFFF; }
-
-        .text-neon-glow {
-            color: #00BFFF;
-            text-shadow: 0 0 8px rgba(0, 191, 255, 0.7),
-                         0 0 15px rgba(0, 191, 255, 0.5);
-        }
-        .nav-brand-glow {
-             text-shadow: 0 0 10px rgba(0, 191, 255, 0.6);
         }
 
         /* SVG Animation */
@@ -165,47 +142,57 @@
             animation: pulse-glow 3s infinite ease-in-out;
         }
 
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 191, 255, 0.2);
+        }
+
     </style>
 </head>
 <body class="antialiased">
-
-    <!-- Canvas for animated background -->
     <canvas id="particle-canvas"></canvas>
+    
+    <audio id="background-audio" loop>
+        <source src="background-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-        <div class="container mx-auto px-6 pt-4">
-             <nav id="navbar" class="flex justify-between items-center glass-card navbar-glass rounded-xl p-3">
-                <a href="#" class="flex items-center gap-3">
-                    <div class="flex flex-col">
-                        <span class="text-2xl font-bold text-white tracking-wider nav-brand-glow text-neon-blue">Lighthouse</span>
-                        <span class="text-xs text-gray-400 tracking-wide font-light -mt-1">"Shining a path through scheduling complexity."</span>
+    <main>
+        <!-- Header -->
+        <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+            <div class="container mx-auto px-6 pt-4">
+                 <nav id="navbar" class="flex justify-between items-center glass-card navbar-glass rounded-xl p-3">
+                    <a href="#" class="flex items-center gap-4">
+                        <div class="flex flex-col">
+                            <span class="text-2xl font-bold text-white tracking-wider text-neon-glow">Lighthouse</span>
+                            <span class="text-xs text-gray-400 tracking-wide font-light -mt-1">"Shining a path through scheduling complexity."</span>
+                        </div>
+                    </a>
+                    <div class="hidden md:flex items-center space-x-2">
+                        <a href="#problem" class="text-gray-300 hover:text-white hover:bg-white/10 transition rounded-full px-4 py-2">The Problem</a>
+                        <a href="#solution" class="text-gray-300 hover:text-white hover:bg-white/10 transition rounded-full px-4 py-2">Our Solution</a>
+                        <a href="#features" class="text-gray-300 hover:text-white hover:bg-white/10 transition rounded-full px-4 py-2">Features</a>
                     </div>
-                </a>
-                <div class="hidden md:flex items-center space-x-2">
-                    <a href="#problem" class="text-gray-300 hover:text-white hover:bg-white/10 transition rounded-full px-4 py-2">The Problem</a>
-                    <a href="#solution" class="text-gray-300 hover:text-white hover:bg-white/10 transition rounded-full px-4 py-2">Our Solution</a>
-                    <a href="#features" class="text-gray-300 hover:text-white hover:bg-white/10 transition rounded-full px-4 py-2">Features</a>
-                </div>
-                <button id="mobile-menu-button" class="md:hidden text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                </button>
-            </nav>
-        </div>
-        <div id="mobile-menu" class="hidden md:hidden container mx-auto px-6 pb-4">
-            <div class="flex flex-col items-center space-y-4 glass-card p-4 mt-2 rounded-xl">
-                 <a href="#problem" class="text-gray-300 hover:text-white transition block w-full text-center py-2">The Problem</a>
-                <a href="#solution" class="text-gray-300 hover:text-white transition block w-full text-center py-2">Our Solution</a>
-                <a href="#features" class="text-gray-300 hover:text-white transition block w-full text-center py-2">Features</a>
-                <a href="#contact" class="bg-neon-blue hover:bg-sky-400 text-black font-bold py-2 px-4 rounded-lg transition block w-full text-center">Stay Informed</a>
+                    <button id="mobile-menu-button" class="md:hidden text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </nav>
             </div>
-        </div>
-    </header>
+            <div id="mobile-menu" class="hidden md:hidden container mx-auto px-6 pb-4">
+                <div class="flex flex-col items-center space-y-4 glass-card p-4 mt-2 rounded-xl">
+                     <a href="#problem" class="text-gray-300 hover:text-white transition block w-full text-center py-2">The Problem</a>
+                     <a href="#solution" class="text-gray-300 hover:text-white transition block w-full text-center py-2">Our Solution</a>
+                     <a href="#features" class="text-gray-300 hover:text-white transition block w-full text-center py-2">Features</a>
+                     <a href="#contact" class="bg-neon-blue hover:bg-sky-400 text-black font-bold py-2 px-4 rounded-full transition block w-full text-center mt-2">Stay Informed</a>
+                </div>
+            </div>
+        </header>
 
-    <main class="relative overflow-hidden">
-        <!-- Glow Effect for decoration -->
         <div class="glow-effect top-0 -left-64"></div>
         <div class="glow-effect bottom-0 -right-64"></div>
 
@@ -219,7 +206,7 @@
                 <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
                     Shining a path through scheduling complexity. Lighthouse is the intelligent, automated platform that empowers school admin to dedicate less time to administrative tasks and more time to what truly matters: supporting students.
                 </p>
-                <a href="#solution" class="btn-primary bg-neon-blue text-black font-bold py-3 px-8 rounded-full text-lg inline-block">
+                <a href="#problem" class="bg-transparent border-2 border-neon-blue text-neon-blue font-bold py-3 px-8 rounded-full text-lg hover:bg-neon-blue hover:text-black transition-all duration-300">
                     Discover The New Way
                 </a>
             </div>
@@ -235,27 +222,30 @@
         <section id="problem" class="py-20 md:py-24 relative z-10">
             <div class="container mx-auto px-6">
                 <div class="text-center max-w-3xl mx-auto">
-                    <h2 class="text-sm font-bold uppercase text-neon-blue tracking-widest">The Old Way Is Broken</h2>
+                    <h2 class="text-sm font-bold uppercase text-sky-500 tracking-widest">The Old Way Is Broken</h2>
                     <h3 class="text-3xl md:text-4xl font-bold text-white mt-2">The Hidden Cost of Manual Scheduling</h3>
                     <p class="text-gray-400 mt-4 text-lg">
                         Across the nation, dedicated school administrators spend hundreds of hours piecing together master schedules by hand. This archaic process is not just inefficient—it's a barrier to student success.
                     </p>
                 </div>
                 <div class="grid md:grid-cols-3 gap-8 mt-16">
-                    <div class="glass-card p-8 rounded-xl border-l-4 border-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <h4 class="text-xl font-bold text-white mb-2">Countless Wasted Hours</h4>
-                        <p class="text-gray-400">Weeks of tedious work, cross-referencing spreadsheets, and manual data entry that could be spent on student guidance and support.</p>
+                    <!-- Problem Card 1 -->
+                    <div class="glass-card rounded-2xl p-8 text-center card-hover-effect">
+                        <div class="text-5xl text-neon-blue mb-4">⏳</div>
+                        <h4 class="text-xl font-bold text-white">Wasted Hours</h4>
+                        <p class="text-gray-400 mt-2">Countless hours of administrative time lost to a manual, repetitive task that could be automated.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-xl border-l-4 border-yellow-500">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                        <h4 class="text-xl font-bold text-white mb-2">Error-Prone & Inflexible</h4>
-                        <p class="text-gray-400">Human error is inevitable, leading to scheduling conflicts, unbalanced classes, and frustrating rework. Adapting to changes is a nightmare.</p>
+                    <!-- Problem Card 2 -->
+                    <div class="glass-card rounded-2xl p-8 text-center card-hover-effect">
+                         <div class="text-5xl text-neon-blue mb-4">😔</div>
+                        <h4 class="text-xl font-bold text-white">Student Dissatisfaction</h4>
+                        <p class="text-gray-400 mt-2">Scheduling conflicts and lack of course availability lead to frustrated students and compromised educational paths.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-xl border-l-4 border-indigo-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                        <h4 class="text-xl font-bold text-white mb-2">Student Needs Overlooked</h4>
-                        <p class="text-gray-400">The focus shifts from strategic student placement and personalized pathways to simply making the puzzle pieces fit. Students deserve better.</p>
+                    <!-- Problem Card 3 -->
+                    <div class="glass-card rounded-2xl p-8 text-center card-hover-effect">
+                         <div class="text-5xl text-neon-blue mb-4">⚙️</div>
+                        <h4 class="text-xl font-bold text-white">Prone to Errors</h4>
+                        <p class="text-gray-400 mt-2">Manual entry and complex rule sets inevitably lead to human errors that are difficult to find and fix.</p>
                     </div>
                 </div>
             </div>
@@ -271,13 +261,13 @@
         <section id="solution" class="py-20 md:py-24 bg-black/40 relative z-10">
             <div class="container mx-auto px-6 text-center">
                 <div class="text-center max-w-3xl mx-auto">
-                    <h2 class="text-sm font-bold uppercase text-neon-blue tracking-widest">A NEW RESOLUTION</h2>
+                    <h2 class="text-sm font-bold uppercase text-sky-500 tracking-widest">A NEW RESOLUTION</h2>
                     <h3 class="text-3xl md:text-4xl font-bold text-white mt-2">Introducing Lighthouse</h3>
                     <p class="text-gray-400 mt-4 text-lg">
                         We believe technology should serve educators, not burden them. Lighthouse is the resolution—a powerful, intuitive platform that automates complexity, optimizes outcomes, and frees your school admin to be the heroes your students need.
                     </p>
                     <div class="mt-12">
-                         <div class="glass-card rounded-2xl p-4 shadow-2xl shadow-sky-500/10 flex items-center justify-center">
+                         <div class="aspect-w-16 aspect-h-9 glass-card rounded-2xl p-4 shadow-2xl shadow-sky-500/10 flex items-center justify-center">
                             <svg width="100%" height="100%" viewBox="0 0 200 100">
                                 <defs>
                                     <radialGradient id="beamGradient">
@@ -315,9 +305,9 @@
 
                                 <!-- Pros Text -->
                                 <text id="pro1" x="170" y="20" font-size="6" fill="#00BFFF" text-anchor="middle" class="opacity-20">Time Saved</text>
-                                <text id="pro2" x="30" y="25" font-size="6" fill="#00BFFF" text-anchor="middle" class="opacity-20">Student Success</text>
-                                <text id="pro3" x="40" y="85" font-size="6" fill="#00BFFF" text-anchor="middle" class="opacity-20">Optimized Resources</text>
-                                <text id="pro4" x="160" y="90" font-size="6" fill="#00BFFF" text-anchor="middle" class="opacity-20">Error Reduction</text>
+                                <text id="pro2" x="30" y="20" font-size="6" fill="#00BFFF" text-anchor="middle" class="opacity-20">Student Success</text>
+                                <text id="pro3" x="30" y="85" font-size="6" fill="#00BFFF" text-anchor="middle" class="opacity-20">Optimized Resources</text>
+                                <text id="pro4" x="170" y="85" font-size="6" fill="#00BFFF" text-anchor="middle" class="opacity-20">Error Reduction</text>
                                 <text id="pro5" x="100" y="15" font-size="6" fill="#00BFFF" text-anchor="middle" class="opacity-20">Data-Driven Insights</text>
                             </svg>
                         </div>
@@ -337,36 +327,24 @@
         <section id="features" class="py-20 md:py-24 relative z-10">
             <div class="container mx-auto px-6">
                 <div class="text-center max-w-3xl mx-auto">
-                    <h2 class="text-sm font-bold uppercase text-neon-blue tracking-widest">EMPOWERING EDUCATORS</h2>
-                    <h3 class="text-3xl md:text-4xl font-bold text-white mt-2">Core Features, Unmatched Power</h3>
+                    <h2 class="text-sm font-bold uppercase text-sky-500 tracking-widest">Powerful Features</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white mt-2">Built for Modern Education</h3>
                 </div>
                 <div class="grid md:grid-cols-3 gap-8 mt-16">
-                    <div class="glass-card p-8 rounded-xl text-center">
-                        <div class="flex justify-center mb-4">
-                            <div class="bg-sky-900/50 p-4 rounded-full border border-sky-500/30">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-neon-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
-                            </div>
-                        </div>
-                        <h4 class="text-xl font-bold text-white mb-2">Intelligent Scheduling Engine</h4>
-                        <p class="text-gray-400">Our AI-powered algorithm considers all your constraints—teacher availability, room capacity, course requests, and student needs—to build optimal schedules automatically.</p>
+                    <!-- Feature Card 1 -->
+                    <div class="glass-card rounded-2xl p-8 card-hover-effect">
+                        <h4 class="text-xl font-bold text-white">Intelligent Automation</h4>
+                        <p class="text-gray-400 mt-2">Our AI-powered engine considers hundreds of constraints—teacher availability, student requests, room capacity, and more—to generate optimal schedules automatically.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-xl text-center">
-                        <div class="flex justify-center mb-4">
-                             <div class="bg-sky-900/50 p-4 rounded-full border border-sky-500/30">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-neon-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" /></svg>
-                            </div>
-                        </div>
-                        <h4 class="text-xl font-bold text-white mb-2">Drag-and-Drop Interface</h4>
-                        <p class="text-gray-400">Need to make manual adjustments? Our intuitive visual interface makes it easy to see the impact of changes in real-time. No more guesswork.</p>
+                    <!-- Feature Card 2 -->
+                    <div class="glass-card rounded-2xl p-8 card-hover-effect">
+                        <h4 class="text-xl font-bold text-white">Scenario Planning</h4>
+                        <p class="text-gray-400 mt-2">Easily create and compare multiple "what-if" scenarios to see the impact of staffing changes or new course offerings before committing.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-xl text-center">
-                        <div class="flex justify-center mb-4">
-                             <div class="bg-sky-900/50 p-4 rounded-full border border-sky-500/30">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-neon-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                            </div>
-                        </div>
-                        <h4 class="text-xl font-bold text-white mb-2">Powerful Analytics</h4>
-                        <p class="text-gray-400">Gain insights into class balancing, resource allocation, and student fulfillment rates. Make data-driven decisions to improve your school's efficiency.</p>
+                    <!-- Feature Card 3 -->
+                    <div class="glass-card rounded-2xl p-8 card-hover-effect">
+                        <h4 class="text-xl font-bold text-white">Data-Driven Insights</h4>
+                        <p class="text-gray-400 mt-2">Leverage powerful analytics to identify scheduling bottlenecks, optimize resource allocation, and make informed decisions for your school.</p>
                     </div>
                 </div>
             </div>
@@ -406,6 +384,20 @@
         </section>
 
     </main>
+    
+    <!-- Audio Controls -->
+    <button id="audio-control" class="fixed bottom-6 left-6 z-40 bg-gray-800/50 backdrop-blur-md p-3 rounded-full text-white hover:bg-gray-700/70 transition">
+        <!-- Mute Icon -->
+        <svg id="unmuted-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+        </svg>
+        <!-- Unmute Icon (hidden by default) -->
+        <svg id="muted-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+        </svg>
+    </button>
+
 
     <!-- Floating Action Button -->
     <a href="#contact" class="floating-btn bg-neon-blue text-black font-bold py-3 px-6 rounded-full text-lg flex items-center gap-2">
@@ -457,6 +449,41 @@
             }, 5000); // Reset form after 5 seconds
         });
 
+        // --- Music Player ---
+        const audio = document.getElementById('background-audio');
+        const audioControl = document.getElementById('audio-control');
+        const unmutedIcon = document.getElementById('unmuted-icon');
+        const mutedIcon = document.getElementById('muted-icon');
+        let isPlaying = false;
+
+        function togglePlay() {
+            isPlaying ? audio.pause() : audio.play();
+        }
+
+        audio.onplaying = function() {
+            isPlaying = true;
+            unmutedIcon.classList.remove('hidden');
+            mutedIcon.classList.add('hidden');
+        };
+
+        audio.onpause = function() {
+            isPlaying = false;
+            unmutedIcon.classList.add('hidden');
+            mutedIcon.classList.remove('hidden');
+        };
+
+        audioControl.addEventListener('click', togglePlay);
+        
+        // Autoplay on first interaction
+        document.body.addEventListener('click', () => {
+            if (!isPlaying && audio.paused) {
+                audio.play().catch(error => {
+                    console.log("Autoplay was prevented. User needs to interact with the page first.");
+                });
+            }
+        }, { once: true });
+
+
         // --- Animated Particle Background ---
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
@@ -468,18 +495,27 @@
         }
 
         class Particle {
-            constructor(x, y, directionX, directionY, size) {
-                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size;
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
             }
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = 'rgba(0, 191, 255, 0.5)';
+                ctx.fillStyle = this.color;
                 ctx.fill();
             }
             update() {
-                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
-                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                if (this.x > canvas.width || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
                 this.x += this.directionX;
                 this.y += this.directionY;
                 this.draw();
@@ -487,34 +523,17 @@
         }
 
         function init() {
+            setCanvasSize();
             particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 12000;
+            let numberOfParticles = (canvas.height * canvas.width) / 9000;
             for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 1.5) + 1;
+                let size = (Math.random() * 1.5) + 0.5;
                 let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
                 let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * .3) - .15;
-                let directionY = (Math.random() * .3) - .15;
-                particlesArray.push(new Particle(x, y, directionX, directionY, size));
-            }
-        }
-
-        function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
-                        ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                        opacityValue = 1 - (distance / 20000);
-                        ctx.strokeStyle = 'rgba(0, 191, 255,' + opacityValue + ')'; // Neon Blue
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
-                }
+                let directionX = (Math.random() * .4) - .2;
+                let directionY = (Math.random() * .4) - .2;
+                let color = 'rgba(0, 191, 255, 0.5)';
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
             }
         }
 
@@ -524,25 +543,15 @@
             for (let i = 0; i < particlesArray.length; i++) {
                 particlesArray[i].update();
             }
-            connect();
         }
 
         window.addEventListener('resize', () => {
-            setCanvasSize();
             init();
         });
 
-        setCanvasSize();
         init();
         animate();
     </script>
-
 </body>
 </html>
-
-
-
-
-
-
 
